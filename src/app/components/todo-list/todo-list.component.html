@@ -1,0 +1,66 @@
+<div class="container">
+  <h1>Lista de Tareas</h1>
+  
+  <div class="add-todo">
+    <form (submit)="addTodo(); $event.preventDefault()">
+      <div class="form-group">
+        <input 
+          type="text" 
+          [(ngModel)]="newTodoTitle" 
+          placeholder="Título de la tarea"
+          name="newTodoTitle"
+          autocomplete="off"
+          required
+        >
+      </div>
+      <div class="form-group">
+        <textarea 
+          [(ngModel)]="newTodoDescription" 
+          placeholder="Descripción de la tarea"
+          name="newTodoDescription"
+          rows="3"
+        ></textarea>
+      </div>
+      <button type="submit" [disabled]="!newTodoTitle.trim()">Agregar Tarea</button>
+    </form>
+  </div>
+  
+  <div class="todo-list">
+    <ng-container *ngIf="todos$ | async as todos">
+      <div *ngIf="todos.length === 0" class="empty-state">
+        <p>No hay tareas pendientes. ¡Agrega una arriba!</p>
+      </div>
+      
+      <table *ngIf="todos.length > 0">
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let todo of todos" [class.completed]="todo.completed">
+            <td>
+              <button 
+                class="status-btn"
+                [class.completed]="todo.completed"
+                (click)="toggleTodo(todo.id)"
+              >
+                {{ getStatusText(todo.completed) }}
+              </button>
+            </td>
+            <td>{{ todo.title }}</td>
+            <td>{{ todo.description }}</td>
+            <td>
+              <button class="delete-btn" (click)="deleteTodo(todo.id)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+</div>
